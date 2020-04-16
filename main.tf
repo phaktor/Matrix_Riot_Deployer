@@ -5,6 +5,8 @@ provider "aws" {
   region = "us-east-2"
 }
 
+#https://learn.hashicorp.com/terraform/getting-started/install.html - to install terraform
+
 module "VPC" {
   source = "./VPC"
   PublicSubnet = module.VPC.PublicSubnet
