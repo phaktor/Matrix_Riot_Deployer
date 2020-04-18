@@ -17,7 +17,7 @@ resource "aws_eip" "ElasticIP" {
 }
 
 data "template_file" "package_installer" {
-  template = file("scripts/matrix_installer.sh")
+  template = file("Scripts/matrix_installer.sh")
 }
 
 resource "aws_instance" "Matrix-Instance" {
