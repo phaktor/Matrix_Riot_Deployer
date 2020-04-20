@@ -5,6 +5,7 @@ All choices for AWS infrastruction was designed to be cheap, but secure/function
 ## Prerequisites:
 * Download Terraform and install it
 * Download the Matrix Server code
+* Edit the Scripts -> matrix_installer.sh file and change the server name to your own
 * Make sure you are signed up for an AWS account
 * Obtain or create a new IAM Access Code
  
@@ -20,7 +21,7 @@ aws_access_key_id = "type your IAM access key id to here"
 aws_secret_access_key = "type your IAM secret access key to here"
 ```
 
-Within terminal, launch or initialize the terraform application by typing:
+Within terminal, navigate to the folder with the code and launch or initialize the terraform application by typing:
 ```
 terraform init
 ```
@@ -37,18 +38,30 @@ When logging into the IP address for the first time, make sure you use
 <EC2 IP Address>:8008
 ```
 
+If you don't see the server page or it appears blank, then you will need to reset the container - see known issues.
+
 ## Clean Up:
 When finished with the server and wanting to clean up AWS, send the command within terminal: 
 ```
 terraform destroy
 ```
 
-## Known Issues:
-After navigating to the webpage, it may take 10 minutes for the server to boot up.
+## Extra
+To make changes to the homeserver.yaml config file, you will need to edit the docker container.
+* Make sure both docker commands have been sent (the first creates the file, but the container is temporary - files stays)
+* Navigate to the AWS console and type in 'sudo su' for root access
+* Run “docker ps -a” for a list of containers and their names (Name column)
+* Type in the following command "docker exec -it <container name> /bin/sh" - in our case, the name is synapse
+* Navigate to the /data folder
+* Edit homeserver.yaml file and save
 
-When you open the webpage for the first time, if nothing happens, the container may be frozen.
+## Known Issues:
+1) After navigating to the webpage, it may take 10 minutes for the server to boot up.
+
+2) When you open the webpage for the first time, if nothing happens, the container may be frozen.
 Open AWS System console and type the following -
 * docker ps -a    (copy the container ID)
 * docker container rm <id>
 * run the two docker commands found in Scripts -> matrix_installer.sh
 * wait 10 minutes for it to start
+
