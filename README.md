@@ -31,6 +31,69 @@ Next, you will start building the AWS architecture/application with the use of:
 terraform apply
 ```
 
+Set up the Nginx/LetsEncrypt certificate with your domain.
+
+Configure Nginx with the following information:
+```
+server {
+    listen 80;
+        listen [::]:80;
+    server_name matrix.vsploit.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name matrix.vsploit.com;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/vsploit.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/vsploit.com/privkey.pem;
+
+    location / {
+        proxy_pass http://172.17.0.2:8008;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+
+server {
+    listen 8448 ssl default_server;
+    listen [::]:8448 ssl default_server;
+    server_name matrix.vsploit.com;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/vsploit.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/vsploit.com/privkey.pem;
+    location / {
+        proxy_pass http://172.17.0.2:8008;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+
+server {
+    listen 80;
+        listen [::]:80;
+    server_name jitsi.vsploit.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl;
+    listen [::]:443 ssl;
+    server_name jitsi.vsploit.com;
+
+    ssl on;
+    ssl_certificate /etc/letsencrypt/live/vsploit.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/vsploit.com/privkey.pem;
+
+    location / {
+        proxy_pass http://172.18.0.3:8443;
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+```
+
 To pause the server, send the request through AWS to STOP the EC2 instance. Then you can start when ready to go.
 
 When logging into the IP address for the first time, make sure you use
