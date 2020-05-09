@@ -16,7 +16,7 @@ docker run -d --name synapse \
     matrixdotorg/synapse:latest
 
 yum -y update
-yum install git
+yum -y install git
 git clone https://github.com/jitsi/docker-jitsi-meet && cd docker-jitsi-meet
 cp env.example .env
 ./gen-passwords.sh
@@ -25,3 +25,13 @@ sudo curl -L https://github.com/docker/compose/releases/download/1.21.0/docker-c
 sudo chmod +x /usr/local/bin/docker-compose
 ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 docker-compose up -d
+
+yum -y install nginx
+yum -y update
+yum -y install software-properties-common
+yum -y install certbot python-certbot-nginx
+
+certbot -d vsploit.com --manual --preferred-challenges dns certonly
+
+sudo systemctl restart nginx
+sudo systemctl enable nginx
