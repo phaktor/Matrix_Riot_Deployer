@@ -38,21 +38,21 @@ Configure Nginx with the following information:
 server {
     listen 80;
         listen [::]:80;
-    server_name matrix.vsploit.com;
+    server_name matrix.example.com;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name matrix.vsploit.com;
+    server_name matrix.example.com;
 
     ssl on;
-    ssl_certificate /etc/letsencrypt/live/vsploit.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/vsploit.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
 
     location / {
-        proxy_pass http://172.17.0.2:8008;
+        proxy_pass http://IP ADDRESS OF CONTAINER:8008;
         proxy_set_header X-Forwarded-For $remote_addr;
     }
 }
@@ -60,13 +60,13 @@ server {
 server {
     listen 8448 ssl default_server;
     listen [::]:8448 ssl default_server;
-    server_name matrix.vsploit.com;
+    server_name matrix.example.com;
 
     ssl on;
-    ssl_certificate /etc/letsencrypt/live/vsploit.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/vsploit.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
     location / {
-        proxy_pass http://172.17.0.2:8008;
+        proxy_pass http://IP ADDRESS OF CONTAINER:8008;
         proxy_set_header X-Forwarded-For $remote_addr;
     }
 }
@@ -74,21 +74,21 @@ server {
 server {
     listen 80;
         listen [::]:80;
-    server_name jitsi.vsploit.com;
+    server_name jitsi.example.com;
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
     listen [::]:443 ssl;
-    server_name jitsi.vsploit.com;
+    server_name jitsi.example.com;
 
     ssl on;
-    ssl_certificate /etc/letsencrypt/live/vsploit.com/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/vsploit.com/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/example.com/privkey.pem;
 
     location / {
-        proxy_pass http://172.18.0.3:8443;
+        proxy_pass http://IP ADDRESS OF CONTAINER:8443;
         proxy_set_header X-Forwarded-For $remote_addr;
     }
 }
@@ -117,6 +117,8 @@ To make changes to the homeserver.yaml config file, you will need to edit the do
 * Type in the following command "docker exec -it <container name> /bin/sh" - in our case, the name is synapse
 * Navigate to the /data folder
 * Edit homeserver.yaml file and save
+* If you need to find the IP address of the container, type in "docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' container_name_or_id"
+
 
 ## Known Issues:
 1) After navigating to the webpage, it may take 10 minutes for the server to boot up.
